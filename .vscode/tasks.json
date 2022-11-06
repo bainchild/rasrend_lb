@@ -6,17 +6,29 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "lua ${workspaceFolder}/build.lua build"
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "clear && lua build.lua build",
+            "problemMatcher": []
         },
         {
             "label": "bundle",
             "type": "shell",
-            "command": "lua ${workspaceFolder}/build.lua bundle"
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "clear && lua build.lua bundle",
+            "problemMatcher": []
         },
         {
             "label": "clean",
             "type": "shell",
-            "command": "lua ${workspaceFolder}/build.lua clean"
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "clear && lua build.lua clean",
+            "problemMatcher": []
         }
     ]
 }

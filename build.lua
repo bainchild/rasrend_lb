@@ -2,6 +2,7 @@ local lfs = require('lfs')
 local pp = require('preprocess')
 local function recurse(path,todo)
 	local todo=todo or {}
+	if lfs.attributes(path)==nil then return todo end
 	for file in lfs.dir(path) do
 		if file~="." and file~=".." then
 			local attr = lfs.attributes(path.."/"..file);
@@ -59,18 +60,20 @@ if (...)=="build" then
 	local todo = recurse("src")
 	for i,v in pairs(todo) do 
 		if not v[1] then
-			lfs.mkdir('build/'..v[2]:sub(4))
-			lfs.mkdir('temp/'..v[2]:sub(4))
+			lfs.mkdir('build/'..v[2]:sub(5))
+			lfs.mkdir('temp/'..v[2]:sub(5))
 		end
 	end
+	lfs.chdir("src");
 	for i,v in pairs(todo) do
 		if v[1] then
 			local info,err = pp.processFile(extend({
-				pathIn=v[2],
-				pathOut='build/'..v[2]:sub(4),
-				pathMeta='temp/'..v[2]:sub(4)
+				pathIn=v[2]:sub(5),
+				pathOut='../build/'..v[2]:sub(5),
+				pathMeta='../temp/'..v[2]:sub(5)
 			},args))
 			if not info then
+				lfs.chdir("..");
 				lfs.rmdir("build");
 				lfs.rmdir("temp");
 				error(err);
@@ -78,6 +81,7 @@ if (...)=="build" then
 			end
 		end
 	end
+	lfs.chdir("..");
 	lfs.rmdir("temp");
 elseif (...)=="bundle" then
 	local found = false
