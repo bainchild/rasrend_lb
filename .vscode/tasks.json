@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "lua ${workspaceFolder}/build.lua build"
+        },
+        {
+            "label": "bundle",
+            "type": "shell",
+            "command": "lua ${workspaceFolder}/build.lua bundle"
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "lua ${workspaceFolder}/build.lua clean"
+        }
+    ]
+}
