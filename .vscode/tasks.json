@@ -9,7 +9,7 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "command": "clear && lua build.lua build",
+            "command": "clear && lua build.lua build logLevel=$(cat ${workspaceFolder}/logLevel)",
             "problemMatcher": []
         },
         {

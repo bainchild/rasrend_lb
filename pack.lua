@@ -178,17 +178,17 @@ end
 
 function import(module_path,method)
     if modules[module_path] then
-	if not print_to_console then print('cached',module_path) end
+	    if not print_to_console then print('cached',module_path) end
     else
         if not print_to_console then print('import',module_path) end
-	local fd, err = io.open(module_path,'r')
-	if fd==nil then error(err) end
-	local source = fd:read("*a")
-	io.close(fd)
+        local fd, err = io.open(module_path,'r')
+        if fd==nil then error(err) end
+        local source = fd:read("*a")
+        io.close(fd)
         if source:sub(1,4)=="\27Lua" then error('TODO: bytecode support') end
-	modules[module_path] = ' --[[PLACEHOLDER]] '
-	source = transform(source, module_path, method)
-	modules[module_path] = source
+        modules[module_path] = ' --[[PLACEHOLDER]] '
+        source = transform(source, module_path, method)
+        modules[module_path] = source
     end
     return require_string(module_path)
 end
@@ -211,6 +211,9 @@ function transform(source, source_path, method)
                 name=name:gsub('%.','/')
                 local path_to_module = path.join(context, name)
                 --print(path_to_module)
+                if path.isdir(path_to_module) then
+                    path_to_module=path_to_module.."/init.lua"
+                end
                 if not (path.isfile(path_to_module) or path.isfile(path_to_module..".lua")) then
                     return nil
                 end
