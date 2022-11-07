@@ -27,7 +27,7 @@ local function recurse_rmdir(dir)
 	end
 	for i,v in pairs(todo) do
 		if not v[1] then
-			lfs.rmdir(v[2]);
+			recurse_rmdir(v[2]);
 		end
 	end
 	lfs.rmdir(dir);
@@ -45,12 +45,21 @@ local function split(a,b)
 	end
 	return n
 end
+local function toValue(n)
+	if tonumber(n) then
+		return tonumber(n)
+	end
+	if n=="nil" then return nil end
+	if n=="true" then return true end
+	if n=="false" then return false end
+	return n
+end
 local args = {}
 for i,v in pairs(({...})) do
 	if i~=1 then
 		local sp = split(v,'=')
 		if #sp==2 then
-			args[sp[1]]=sp[2]
+			args[sp[1]]=toValue(sp[2]);
 		end
 	end
 end
@@ -70,19 +79,23 @@ if (...)=="build" then
 			local info,err = pp.processFile(extend({
 				pathIn=v[2]:sub(5),
 				pathOut='../build/'..v[2]:sub(5),
-				pathMeta='../temp/'..v[2]:sub(5)
+				pathMeta='../temp/'..v[2]:sub(5),
 			},args))
 			if not info then
 				lfs.chdir("..");
-				lfs.rmdir("build");
-				lfs.rmdir("temp");
+				recurse_rmdir("build");
+				if not args["stemp"] then
+					recurse_rmdir("temp");
+				end
 				error(err);
 				break
 			end
 		end
 	end
 	lfs.chdir("..");
-	lfs.rmdir("temp");
+	if not args["stemp"] then
+		recurse_rmdir("temp");
+	end
 elseif (...)=="bundle" then
 	local found = false
 	for f in lfs.dir(".") do

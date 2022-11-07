@@ -3610,7 +3610,7 @@ local function _processFileOrString(params, isFile)
 		main_chunk() -- Note: Our caller should clean up current_meta_pathForErrorMessages etc. on error.
 		current_anytime_isRunningMeta = false
 
-		if not current_parsingAndMeta_isDebug and params.pathMeta then
+		if not current_parsingAndMeta_isDebug and params.pathMeta and not params.keepMeta then
 			os.remove(params.pathMeta)
 		end
 
