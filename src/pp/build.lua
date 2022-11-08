@@ -1,5 +1,5 @@
 !(
-    @@"pp/utils.lua"
+    @@"utils.lua"
     build = {
         branch=popen("git rev-parse --abbrev-ref HEAD"):sub(1,-2);
         hash=popen("git log -1 --format=%h"):sub(1,-2);--string_split(popen("git show-ref"),"%s")[1];
