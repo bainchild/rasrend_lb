@@ -9,7 +9,7 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "command": "clear && lua build.lua build logLevel=$(cat ${workspaceFolder}/logLevel)",
+            "command": "clear && lua build.lua build \"env=${input:type}\" logLevel=${input:logLevel}",
             "problemMatcher": []
         },
         {
@@ -29,6 +29,22 @@
             },
             "command": "clear && lua build.lua clean",
             "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "type",
+            "type": "pickString",
+            "description": "build enviroment or type",
+            "options": ["development","prod_alpha","prod_beta","production"],
+            "default": "development"
+        },
+        {
+            "id": "logLevel",
+            "type": "pickString",
+            "description": "LOG() macro level",
+            "options": ["error","warning","info","debug","trace","off"],
+            "default": "warning"
         }
     ]
 }

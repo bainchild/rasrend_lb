@@ -1,18 +1,18 @@
 local lfs = require('lfs')
 local pp = require('preprocess')
-local function recurse(path,todo)
+local function recurse(path,todo,cext)
 	local todo=todo or {}
 	if lfs.attributes(path)==nil then return todo end
 	for file in lfs.dir(path) do
 		if file~="." and file~=".." then
 			local attr = lfs.attributes(path.."/"..file);
 			if attr.mode=="file" then
-				if file:sub(-4) == ".lua" then
+				if (cext and cext(file,attr)) or (cext==nil and file:sub(-4)==".lua") then
 					table.insert(todo,{true,path.."/"..file});
 				end
 			elseif attr.mode=="directory" then
 				table.insert(todo,{false,path..'/'..file});
-				recurse(path.."/"..file,todo);
+				recurse(path.."/"..file,todo,cext);
 			end
 		end
 	end
@@ -66,7 +66,9 @@ end
 if (...)=="build" then
 	lfs.mkdir("build")
 	lfs.mkdir("temp")
-	local todo = recurse("src")
+	local todo = recurse("src",nil,function(f)
+		return true
+	end)
 	for i,v in pairs(todo) do 
 		if not v[1] then
 			lfs.mkdir('build/'..v[2]:sub(5))
@@ -80,6 +82,7 @@ if (...)=="build" then
 				pathIn=v[2]:sub(5),
 				pathOut='../build/'..v[2]:sub(5),
 				pathMeta='../temp/'..v[2]:sub(5),
+				validate=v[2]:sub(-4)==".lua"
 			},args))
 			if not info then
 				lfs.chdir("..");
