@@ -5,13 +5,7 @@
         c:close()
         return content
     end
-    function string_split(string,delimiter)
-        local n = {}
-        for match in (string..delimiter):gmatch("(.-)"..delimiter) do
-            table.insert(n,match)
-        end
-        return n
-    end
+
     local table_find = table.find or function(table,pin)
         for i,v in pairs(table) do if v==pin then return i end end
     end

@@ -82,12 +82,13 @@ if (...)=="build" then
 				pathIn=v[2]:sub(5),
 				pathOut='../build/'..v[2]:sub(5),
 				pathMeta='../temp/'..v[2]:sub(5),
+				keepMeta=args["debug"],
 				validate=v[2]:sub(-4)==".lua"
 			},args))
 			if not info then
 				lfs.chdir("..");
 				recurse_rmdir("build");
-				if not args["stemp"] then
+				if not args["debug"] then
 					recurse_rmdir("temp");
 				end
 				error(err);
